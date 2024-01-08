@@ -1,17 +1,12 @@
 <?php
 class AdminController extends Controller
 {
-   
-
-    public function adminD()
+    private $categoryModel;
+    public function __construct()
     {
-        $categoryModel = $this->loadModel('CategoryModel');
-        $categories = $categoryModel->getAllCategories();
-
-        $data = [
-            'categories' => $categories,
-        ];
-
-        $this->view('adminD', $data);
+        $this->categoryModel = $this->model('Category');
     }
+
+
+
 }
