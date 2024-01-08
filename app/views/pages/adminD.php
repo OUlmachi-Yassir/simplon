@@ -38,23 +38,39 @@ require APPROOT . '/views/inc/header.php';
 
 
 
-
+<!-- app/views/pages/adminD.php -->
+<!-- <?php if (isset($categories)): ?>
+    <ul>
+        <?php foreach ($categories as $category): ?>
+            <li><?php echo $category['name']; ?></li>
+        <?php endforeach; ?>
+    </ul>
+<?php else: ?>
+    <p>No categories available.</p>
+<?php endif; ?> -->
 
 <div class="container">
     <h2>Categories</h2>
-    <ul>
-        <?php foreach ($data['categories'] as $category) : ?>
-            <li><?php echo $category->name; ?>
-                <a href="<?php echo URLROOT; ?>/categories/edit/<?php echo $category->categoryId; ?>">Edit</a>
-                <form action="<?php echo URLROOT; ?>/categories/delete/<?php echo $category->categoryId; ?>" method="post" style="display:inline;">
-                    <input type="submit" value="Delete">
-                </form>
-            </li>
-        <?php endforeach; ?>
-    </ul>
+    <?php if (!empty($data['categories'])) : ?>
+        <ul>
+            <?php foreach ($data['categories'] as $category) : ?>
+                <li>
+                    <?php echo $category['name']; ?>
+                    <a href="<?php echo URLROOT; ?>/categories/edit/<?php echo $category['categoryId']; ?>">Edit</a>
+                    <form action="<?php echo URLROOT; ?>/categories/delete/<?php echo $category['categoryId']; ?>" method="post" style="display:inline;">
+                        <input type="submit" value="Delete">
+                    </form>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php else : ?>
+        <p>No categories available.</p>
+    <?php endif; ?>
 
     <a href="<?php echo URLROOT; ?>/categories/add">Add Category</a>
 </div>
+
+
 
 <?php require APPROOT . '/views/inc/footer.php'; ?>
     
