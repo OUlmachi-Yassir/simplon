@@ -162,11 +162,22 @@
       }
   
       public function createUserSession($user){
-        $_SESSION['user_id'] = $user->id;
+        $_SESSION['user_id'] = $user->userId;
         $_SESSION['user_email'] = $user->email;
-        $_SESSION['user_name'] = $user->name;
-        redirect('pages/index');
+        $_SESSION['user_name'] = $user->username;
+        $_SESSION['user_role'] = $user->role;
+
+        if ($this->isLoggedIn()) {
+          if ($_SESSION['user_role'] == 'author') {
+              redirect('pages/authorD'); // Redirect to authoreD.php for authors
+          } elseif ($_SESSION['user_role'] == 'admin') {
+              redirect('pages/adminD'); // Redirect to adminD.php for admins
+          } else {
+              // Default redirection if the role is not recognized
+              redirect('pages/index');
+          }
       }
+    }
   
       public function logout(){
         unset($_SESSION['user_id']);

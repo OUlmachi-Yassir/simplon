@@ -22,7 +22,7 @@
 
 
     public function login($email, $password){
-        $this->db->query('SELECT * FROM user WHERE email = :email');
+        $this->db->query('SELECT userId,username,email,role,password FROM user WHERE email = :email');
         $this->db->bind(':email', $email);
   
         $row = $this->db->single();

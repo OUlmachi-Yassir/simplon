@@ -37,5 +37,21 @@
 
       $this->view('pages/register',$data);
     }
+
+    public function authorD(){
+      $data = [
+        'title' => 'authorD'
+      ];
+
+      $this->view('pages/authorD',$data);
+    }
+
+    public function adminD(){
+      $data = [
+        'title' => 'adminD'
+      ];
+
+      $this->view('pages/adminD',$data);
+    }
     
   }
