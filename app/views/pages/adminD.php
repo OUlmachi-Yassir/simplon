@@ -35,6 +35,26 @@ require APPROOT . '/views/inc/header.php';
     </div>
 </header>
 <br><br><br>
+
+
+
+
+
+<div class="container">
+    <h2>Categories</h2>
+    <ul>
+        <?php foreach ($data['categories'] as $category) : ?>
+            <li><?php echo $category->name; ?>
+                <a href="<?php echo URLROOT; ?>/categories/edit/<?php echo $category->categoryId; ?>">Edit</a>
+                <form action="<?php echo URLROOT; ?>/categories/delete/<?php echo $category->categoryId; ?>" method="post" style="display:inline;">
+                    <input type="submit" value="Delete">
+                </form>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+
+    <a href="<?php echo URLROOT; ?>/categories/add">Add Category</a>
+</div>
+
+<?php require APPROOT . '/views/inc/footer.php'; ?>
     
-</body>
-</html>

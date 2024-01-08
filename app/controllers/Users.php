@@ -95,6 +95,14 @@
     }
 
     public function login(){
+
+
+            // Check if user is already logged in
+      if($this->isLoggedIn()){
+            redirect('pages/index'); // Change 'dashboard' to the desired page
+        }
+
+
       // Check for POST
       if($_SERVER['REQUEST_METHOD'] == 'POST'){
         // Process form
