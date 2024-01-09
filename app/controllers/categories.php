@@ -4,9 +4,11 @@
 class Categories extends Controller
 {
     private $categoryModel;
+    protected $tagModel;
     public function __construct()
     {
         $this->categoryModel = $this->model('Category');
+        $this->tagModel = $this->model('Tag');
     }
 
     // Add a category
@@ -58,6 +60,61 @@ class Categories extends Controller
         }
     }
 
-    // Display all categories
+
+    // Add a tag to a category
+    public function addTag($categoryId) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Sanitize input
+            $name = filter_input(INPUT_POST, 'tag_name', FILTER_SANITIZE_STRING);
+
+            if ($this->tagModel->addTag($name, $categoryId)) {
+                redirect('categories');
+            } else {
+                die('Something went wrong');
+            }
+        } else {
+            // Load your view for adding tags
+            $this->view('tags/add', ['categoryId' => $categoryId]);
+        }
+    }
+
+    // Edit a tag
+    public function editTag($tagId) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Sanitize input
+            $name = filter_input(INPUT_POST, 'tag_name', FILTER_SANITIZE_STRING);
+
+            if ($this->tagModel->editTag($tagId, $name)) {
+                redirect('categories');
+            } else {
+                die('Something went wrong');
+            }
+        } else {
+            // Load your view for editing tags
+            $tag = $this->tagModel->getTagById($tagId);
+            $this->view('tags/edit', ['tag' => $tag]);
+        }
+    }
+
+    // Delete a tag
+    public function deleteTag($tagId) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if ($this->tagModel->deleteTag($tagId)) {
+                redirect('categories');
+            } else {
+                die('Something went wrong');
+            }
+        } else {
+            // Load your view for deleting tags
+            $tag = $this->tagModel->getTagById($tagId);
+            $this->view('tags/delete', ['tag' => $tag]);
+        }
+    }
+
+    public function index()
+    {
+        $categories = $this->categoryModel->getCategories();
+        $this->view('pages/adminD', ['categories' => $categories]);
+    }
 
 }

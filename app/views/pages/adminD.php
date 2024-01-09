@@ -55,6 +55,27 @@ require APPROOT . '/views/inc/header.php';
 </div>
 
 
+<!--.............................-->
+<ul class="flex justify-between">
+    <?php foreach ($data['categories'] as $category): ?>
+        <li>
+            <?php echo $category->name; ?>
+            <ul>
+                <?php
+                $tags = $this->tagModel->getTagsByCategory($category->categoryId);
+                foreach ($tags as $tag): ?>
+                    <li><?php echo $tag->name; ?></li>
+                    <a href="<?php echo URLROOT; ?>/categories/editTag/<?php echo $tag->tagId; ?>">Edit</a>
+                    <a href="<?php echo URLROOT; ?>/categories/deleteTag/<?php echo $tag->tagId; ?>">Delete</a>
+                <?php endforeach; ?>
+            </ul>
+            <a href="<?php echo URLROOT; ?>/categories/addTag/<?php echo $category->categoryId; ?>">Add Tag</a>
+        </li>
+    <?php endforeach; ?>
+</ul>
+
+
+
 
 
 <?php require APPROOT . '/views/inc/footer.php'; ?>
