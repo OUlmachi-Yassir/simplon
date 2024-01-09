@@ -66,7 +66,9 @@ require APPROOT . '/views/inc/header.php';
                 foreach ($tags as $tag): ?>
                     <li><?php echo $tag->name; ?></li>
                     <a href="<?php echo URLROOT; ?>/categories/editTag/<?php echo $tag->tagId; ?>">Edit</a>
-                    <a href="<?php echo URLROOT; ?>/categories/deleteTag/<?php echo $tag->tagId; ?>">Delete</a>
+                    <form action="<?php echo URLROOT; ?>/categories/deleteTag/<?php echo $tag->tagId; ?>" method="post" style="display:inline;">
+                        <input type="submit" value="Delete">
+                    </form>
                 <?php endforeach; ?>
             </ul>
             <a href="<?php echo URLROOT; ?>/categories/addTag/<?php echo $category->categoryId; ?>">Add Tag</a>

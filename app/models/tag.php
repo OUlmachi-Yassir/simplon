@@ -16,10 +16,9 @@ class Tag {
         return $this->db->execute();
     }
 
-    public function editTag($tagId, $name, $categoryId) {
-        $this->db->query('UPDATE tag SET name = :name, categoryId = :categoryId WHERE tagId = :tagId');
+    public function editTag($tagId, $name) {
+        $this->db->query('UPDATE tag SET name = :name WHERE tagId = :tagId');
         $this->db->bind(':name', $name);
-        $this->db->bind(':categoryId', $categoryId);
         $this->db->bind(':tagId', $tagId);
 
         return $this->db->execute();

@@ -74,7 +74,7 @@ class Categories extends Controller
             }
         } else {
             // Load your view for adding tags
-            $this->view('tags/add', ['categoryId' => $categoryId]);
+            $this->view('categories/addTag', ['categoryId' => $categoryId]);
         }
     }
 
@@ -92,7 +92,7 @@ class Categories extends Controller
         } else {
             // Load your view for editing tags
             $tag = $this->tagModel->getTagById($tagId);
-            $this->view('tags/edit', ['tag' => $tag]);
+            $this->view('categories/editTag', ['tag' => $tag]);
         }
     }
 
@@ -105,9 +105,7 @@ class Categories extends Controller
                 die('Something went wrong');
             }
         } else {
-            // Load your view for deleting tags
-            $tag = $this->tagModel->getTagById($tagId);
-            $this->view('tags/delete', ['tag' => $tag]);
+            redirect('categories');
         }
     }
 

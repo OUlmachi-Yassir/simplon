@@ -2,9 +2,11 @@
 class Pages extends Controller
 {
   private $categoryModel;
+  protected $tagModel;
   public function __construct()
   {
     $this->categoryModel = $this->model('Category');
+    $this->tagModel = $this->model('Tag');
   }
 
   public function index()
@@ -59,6 +61,7 @@ class Pages extends Controller
     $categories = $this->categoryModel->getCategories();
     $data = [
       'categories' => $categories,
+      'tagModel' => $this->tagModel,
     ];
     $this->view('pages/adminD', $data);
   }
