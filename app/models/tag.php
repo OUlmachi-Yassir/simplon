@@ -43,4 +43,10 @@ class Tag {
         $this->db->bind(':tagId', $tagId);
         return $this->db->single();
     }
+
+    public function getTags()
+    {
+        $this->db->query('SELECT * FROM tag ');
+        return $this->db->resultSet();
+    }
 }

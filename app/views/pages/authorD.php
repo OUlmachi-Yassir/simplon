@@ -1,5 +1,9 @@
 <?php
 require APPROOT . '/views/inc/header.php';
+
+
+var_dump($_SESSION['user_id'], $_SESSION['user_role']);
+
 ?>
 
 <header
@@ -35,5 +39,58 @@ require APPROOT . '/views/inc/header.php';
     </div>
 </header>
 <br><br><br>
+
+
+
+<h1>Author Dashboard</h1>
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Content</th>
+                <!-- Add more table headers as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($data['wikis'] as $wiki) : ?>
+                <tr>
+                    <td><?= $wiki->title; ?></td>
+                    <td><?= $wiki->content; ?></td>
+                    <!-- Add more table cells as needed -->
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+
+
+<br><br><br>
+<h1>Add a Wiki</h1>
+
+<form action="<?= URLROOT; ?>/categories/addWiki" method="post">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required>
+
+    <label for="content">Content:</label>
+    <textarea id="content" name="content" required></textarea>
+
+    <label for="category">Category:</label>
+    <select id="category" name="category" required>
+        <?php foreach ($data['categories'] as $category) : ?>
+            <option value="<?= $category->categoryId; ?>"><?= $category->name; ?></option>
+        <?php endforeach; ?>
+    </select>
+
+    <label for="tags">Tags:</label>
+    <select id="tags" name="tags[]" multiple>
+        <?php foreach ($data['tags'] as $tag) : ?>
+            <option value="<?= $tag->tagId; ?>"><?= $tag->name; ?></option>
+        <?php endforeach; ?>
+    </select>
+
+    <button type="submit">Add Wiki</button>
+</form>
+
 </body>
 </html>

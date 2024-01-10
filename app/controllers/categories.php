@@ -1,14 +1,14 @@
 <?php
-
-// app/controllers/Categories.php
 class Categories extends Controller
 {
     private $categoryModel;
     protected $tagModel;
+    protected $wikiModel;
     public function __construct()
     {
         $this->categoryModel = $this->model('Category');
         $this->tagModel = $this->model('Tag');
+        $this->wikiModel = $this->model('Wiki');
     }
 
     // Add a category
@@ -108,6 +108,18 @@ class Categories extends Controller
             redirect('categories');
         }
     }
+
+
+    // Display wikis on authorD.php
+    public function displayWikisForAuthor()
+    {
+        // Fetch all wikis
+        $wikis = $this->wikiModel->getAllWikis();
+
+        // Load your view for displaying wikis for the author
+        $this->view('pages/authorD', ['wikis' => $wikis]);
+    }
+
 
     public function index()
     {

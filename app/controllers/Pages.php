@@ -5,6 +5,9 @@ class Pages extends Controller
   protected $tagModel;
   public function __construct()
   {
+    if(!isset($_SESSION['user_id'])){
+      redirect('users/login');
+    }
     $this->categoryModel = $this->model('Category');
     $this->tagModel = $this->model('Tag');
   }
@@ -49,8 +52,21 @@ class Pages extends Controller
 
   public function authorD()
   {
+    // Assuming you have a Wiki model
+    $wikiModel = $this->model('Wiki');
+
+    // Fetch wikis from the model
+    $wikis = $wikiModel->getWikis();
+
+    // Other necessary data like categories and tags
+    $categories = $this->categoryModel->getCategories();
+    $tags = $this->tagModel->getTags();
+
     $data = [
-      'title' => 'authorD'
+        'title' => 'Author Dashboard',
+        'wikis' => $wikis,
+        'categories' => $categories,
+        'tags' => $tags,
     ];
 
     $this->view('pages/authorD', $data);

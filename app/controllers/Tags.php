@@ -24,11 +24,11 @@ class Tags extends Controller {
     }
 
     public function edit($tagId) {
-        // Similar to Categories controller's edit method
+       
     }
 
     public function delete($tagId) {
-        // Similar to Categories controller's delete method
+        
     }
 
     public function index($categoryId) {

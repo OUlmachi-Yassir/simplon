@@ -168,25 +168,30 @@ class Users extends Controller
       $this->view('users/login', $data);
     }
   }
+  public function isLoggedIn()
+    {
+        return isset($_SESSION['user_id']);
+    }
 
   public function createUserSession($user)
-  {
+ {
     $_SESSION['user_id'] = $user->userId;
     $_SESSION['user_email'] = $user->email;
     $_SESSION['user_name'] = $user->username;
     $_SESSION['user_role'] = $user->role;
 
     if ($this->isLoggedIn()) {
-      if ($_SESSION['user_role'] == 'author') {
-        redirect('pages/authorD'); // Redirect to authoreD.php for authors
-      } elseif ($_SESSION['user_role'] == 'admin') {
-        redirect('pages/adminD'); // Redirect to adminD.php for admins
-      } else {
-        // Default redirection if the role is not recognized
-        redirect('pages/index');
-      }
+        if ($_SESSION['user_role'] == 'Admin') {
+            redirect('pages/adminD'); // Redirect to adminD.php for admins
+        } elseif ($_SESSION['user_role'] == 'Author') {
+            redirect('pages/authorD'); // Redirect to authorD.php for authors
+        } else {
+            // Default redirection if the role is not recognized
+            redirect('pages/index');
+        }
     }
-  }
+}
+
 
   public function logout()
   {
@@ -197,12 +202,5 @@ class Users extends Controller
     redirect('users/login');
   }
 
-  public function isLoggedIn()
-  {
-    if (isset($_SESSION['user_id'])) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+ 
 }
