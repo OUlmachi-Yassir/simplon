@@ -3,6 +3,7 @@ class Pages extends Controller
 {
   private $categoryModel;
   protected $tagModel;
+  private $wikiModel;
   public function __construct()
   {
     if(!isset($_SESSION['user_id'])){
@@ -10,7 +11,36 @@ class Pages extends Controller
     }
     $this->categoryModel = $this->model('Category');
     $this->tagModel = $this->model('Tag');
+    $this->wikiModel = $this->model('Wiki'); // Assuming you have a Wiki model
+
   }
+
+
+  public function addWiki()
+  {
+      if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+          $title = $_POST['title'];
+          $content = $_POST['content'];
+          $categoryId = $_POST['category'];
+          $tags = isset($_POST['tags']) ? $_POST['tags'] : [];
+
+          // Add the wiki to the wiki table
+          $wikiId = $this->wikiModel->addWiki($title, $content, $categoryId);
+
+          // Add tags to the wikitag association table
+          foreach ($tags as $tagId) {
+              $this->wikiModel->addWikiTag($wikiId, $tagId);
+          }
+
+          // Redirect or show a success message
+          redirect('pages/authorD');
+      } else {
+          // Handle non-POST requests
+          redirect('pages/authorD'); 
+      }
+  }
+
+
 
   public function index()
   {

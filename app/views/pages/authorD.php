@@ -68,7 +68,7 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
 <br><br><br>
 <h1>Add a Wiki</h1>
 
-<form action="<?= URLROOT; ?>/categories/addWiki" method="post">
+<form action="<?= URLROOT; ?>/pages/addWiki" method="post">
     <label for="title">Title:</label>
     <input type="text" id="title" name="title" required>
 
