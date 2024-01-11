@@ -68,7 +68,7 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
 <br><br><br>
 <h1>Add a Wiki</h1>
 
-<form action="<?= URLROOT; ?>/pages/addWiki" method="post">
+<form action="<?= URLROOT; ?>/pages/addWiki" method="post" id="addWikiForm">
     <label for="title">Title:</label>
     <input type="text" id="title" name="title" required>
 
@@ -76,7 +76,7 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
     <textarea id="content" name="content" required></textarea>
 
     <label for="category">Category:</label>
-    <select id="category" name="category" required>
+    <select id="category" name="category" onchange="updateTags()" required>
         <?php foreach ($data['categories'] as $category) : ?>
             <option value="<?= $category->categoryId; ?>"><?= $category->name; ?></option>
         <?php endforeach; ?>
@@ -84,13 +84,43 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
 
     <label for="tags">Tags:</label>
     <select id="tags" name="tags[]" multiple>
-        <?php foreach ($data['tags'] as $tag) : ?>
-            <option value="<?= $tag->tagId; ?>"><?= $tag->name; ?></option>
-        <?php endforeach; ?>
+        <!-- Tags will be populated dynamically using JavaScript -->
     </select>
 
     <button type="submit">Add Wiki</button>
 </form>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    function updateTags() {
+        var categoryId = $("#category").val();
+
+        $.ajax({
+            url: "<?= URLROOT; ?>/pages/getTagsByCategory/" + categoryId,
+            method: "GET",
+            success: function (data) {
+                var tagsSelect = $("#tags");
+                tagsSelect.empty(); // Clear existing options
+
+                $.each(data, function (index, tag) {
+                    var option = $("<option></option>")
+                        .attr("value", tag.tagId)
+                        .text(tag.name);
+                    tagsSelect.append(option);
+                });
+            },
+            error: function (error) {
+                console.error("Error fetching tags:", error);
+            }
+        });
+    }
+
+    // Initialize tags on page load
+    updateTags();
+
+    // Attach the updateTags function to the category change event
+    $("#category").on("change", updateTags);
+</script>
+
 
 </body>
 </html>

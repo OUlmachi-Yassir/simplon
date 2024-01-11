@@ -35,9 +35,24 @@ class Pages extends Controller
           // Redirect or show a success message
           redirect('pages/authorD');
       } else {
-          // Handle non-POST requests
-          redirect('pages/authorD'); 
-      }
+          // Fetch categories and tags for the form
+        $categories = $this->categoryModel->getCategories();
+        $tagsByCategory = [];
+
+        // Assuming you have a method in Tag model to get tags by category
+        foreach ($categories as $category) {
+            $tagsByCategory[$category->categoryId] = $this->tagModel->getTagsByCategory($category->categoryId);
+        }
+
+        // Other necessary data like categories and tags
+        $data = [
+            'title' => 'Add Wiki',
+            'categories' => $categories,
+            'tagsByCategory' => $tagsByCategory,
+        ];
+
+        $this->view('pages/addWiki', $data); // Create a new view file 'addWiki.php'
+    }
   }
 
 

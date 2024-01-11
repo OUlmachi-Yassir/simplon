@@ -24,7 +24,7 @@ class Categories extends Controller
                 die('Something went wrong');
             }
         } else {
-            $this->view('categories/add');
+            $this->view('categorie/add');
         }
     }
 
@@ -42,13 +42,14 @@ class Categories extends Controller
             }
         } else {
             $category = $this->categoryModel->getCategoryById($id);
-            $this->view('categories/edit', ['category' => $category]);
+            $this->view('categorie/edit', ['category' => $category]);
         }
     }
 
     // Delete a category
     public function delete($id)
     {
+        $tags = $this->tagModel->getTagsByCategory($id);
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($this->categoryModel->deleteCategory($id)) {
                 redirect('categories');
@@ -74,7 +75,7 @@ class Categories extends Controller
             }
         } else {
             // Load your view for adding tags
-            $this->view('categories/addTag', ['categoryId' => $categoryId]);
+            $this->view('categorie/addTag', ['categoryId' => $categoryId]);
         }
     }
 
@@ -92,7 +93,7 @@ class Categories extends Controller
         } else {
             // Load your view for editing tags
             $tag = $this->tagModel->getTagById($tagId);
-            $this->view('categories/editTag', ['tag' => $tag]);
+            $this->view('categorie/editTag', ['tag' => $tag]);
         }
     }
 
