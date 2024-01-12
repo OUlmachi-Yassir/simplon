@@ -179,7 +179,4 @@ public function archiveWiki($wikiId)
         $this->view('pages/adminD', ['categories' => $categories]);
     }
 
-
-
-   
 }

@@ -84,35 +84,8 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
             </label>
             
         </form>
-
-       
     </div>
 </div>
-
-
-
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-    <?php
-    // Display search results if available
-    if (!empty($data['wikis'])) :
-        foreach ($data['wikis'] as $wiki) :
-            ?>
-            <div class="border border-gray-200 p-4 rounded-md shadow-lg shadow-grey-800">
-                <h2 class="text-lg font-semibold mb-2"><?= $wiki->title; ?></h2>
-                <p class="text-gray-700"><?= $wiki->content; ?></p>
-                <!-- Add buttons as needed (Edit, Delete, Archive) -->
-            </div>
-            <?php
-        endforeach;
-    else :
-        ?>
-        <p>No results found.</p>
-    <?php endif; ?>
-</div>
-
-
-
- 
 
 
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ">
@@ -121,6 +94,7 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
         <div class="border border-gray-200 p-4 rounded-md shadow-lg shadow-grey-800 ">
             <h2 class="text-lg font-semibold mb-2"><?= $wiki->title; ?></h2>
             <p class="text-gray-700"><?= $wiki->content; ?></p>
+            <p class="bg-blue-300 p-3 rounded-md"><?= $wiki->categoryId; ?></p>
             <div class="mt-4 flex justify-end ">
                 <!-- Edit button -->
                 <a class="bg-blue-500 text-white px-4 py-2 rounded-md mr-2" href="<?= URLROOT ?>/categories/editWiki/<?= $wiki->wikiId; ?>">Edit</a>
@@ -137,11 +111,6 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
         <?php endif; ?>
     <?php endforeach; ?>
 </div>
-
-
-
-
-
 
 <?php
 require APPROOT . '/views/inc/footer.php';

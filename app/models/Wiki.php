@@ -72,6 +72,4 @@ public function editWiki($wikiId, $title, $content, $categoryId)
     $this->db->execute();
 }
 
-
-
 }
