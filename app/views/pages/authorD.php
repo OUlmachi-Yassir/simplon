@@ -43,25 +43,24 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
 
 
 <h1>Author Dashboard</h1>
-    
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Content</th>
-                <!-- Add more table headers as needed -->
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($data['wikis'] as $wiki) : ?>
-                <tr>
-                    <td><?= $wiki->title; ?></td>
-                    <td><?= $wiki->content; ?></td>
-                    <!-- Add more table cells as needed -->
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <?php foreach ($data['wikis'] as $wiki) : ?>
+        <div class="border border-gray-200 p-4 rounded-md">
+            <h2 class="text-lg font-semibold mb-2"><?= $wiki->title; ?></h2>
+            <p class="text-gray-700"><?= $wiki->content; ?></p>
+            <div class="mt-4 flex justify-end">
+
+                <a class="bg-blue-500 text-white px-4 py-2 rounded-md mr-2" href="<?= URLROOT ?>/categories/editWiki/<?= $wiki->wikiId; ?>">Edit</a>
+                <!-- Delete button -->
+                <form method="post" action="<?= URLROOT ?>/categories/deleteWiki/<?= $wiki->wikiId; ?>" onsubmit="return confirm('Are you sure you want to delete this wiki?');">
+                    <button class="bg-red-500 text-white px-4 py-2 rounded-md" type="submit">Delete</button>
+                </form>
+            </div>
+        </div>
+    <?php endforeach; ?>
+</div>
+
 
 
 
@@ -92,12 +91,14 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     function updateTags() {
+        console.log("Category changed. Sending AJAX request...");
         var categoryId = $("#category").val();
 
         $.ajax({
             url: "<?= URLROOT; ?>/pages/getTagsByCategory/" + categoryId,
             method: "GET",
             success: function (data) {
+                console.log("Received data from server:", data);
                 var tagsSelect = $("#tags");
                 tagsSelect.empty(); // Clear existing options
 

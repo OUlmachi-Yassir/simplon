@@ -36,48 +36,76 @@ require APPROOT . '/views/inc/header.php';
 <br><br><br>
 
 
-<div class="container">
-    <h2>Categories</h2>
+<div class="container mx-auto p-4">
+    <h2 class="text-2xl font-bold mb-4">Categories</h2>
+
     <?php if (!empty($data['categories'])) : ?>
-        <ul>
+        <ul class="list-disc pl-4">
             <?php foreach ($data['categories'] as $category) : ?>
-                <li>
-                    <?php echo $category->name; ?>
-                    <a href="<?php echo URLROOT; ?>/categories/edit/<?php echo $category->categoryId; ?>">Edit</a>
-                    <form action="<?php echo URLROOT; ?>/categories/delete/<?php echo $category->categoryId; ?>" method="post" style="display:inline;">
-                        <input type="submit" value="Delete">
-                    </form>
+                <li class="flex items-center justify-between border-b py-2">
+                    <span><?php echo $category->name; ?></span>
+                    
+                    <div class="flex space-x-2">
+                        <a href="<?php echo URLROOT; ?>/categories/edit/<?php echo $category->categoryId; ?>"
+                            class="text-blue-500 hover:underline">Edit</a>
+
+                        <form action="<?php echo URLROOT; ?>/categories/delete/<?php echo $category->categoryId; ?>"
+                            method="post" class="inline">
+                            <input type="submit" value="Delete"
+                                class="text-red-500 hover:text-red-700 cursor-pointer">
+                        </form>
+                    </div>
                 </li>
             <?php endforeach; ?>
         </ul>
     <?php else : ?>
-        <p>No categories available.</p>
+        <p class="mt-4">No categories available.</p>
     <?php endif; ?>
 
-    <a href="<?php echo URLROOT; ?>/categories/add">Add Category</a>
+    <a href="<?php echo URLROOT; ?>/categories/add"
+        class="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Add Category</a>
 </div>
 
 
 <!--.............................-->
-<ul class="flex justify-between">
-    <?php foreach ($data['categories'] as $category): ?>
-        <li>
-            <?php echo $category->name; ?>
-            <ul>
-                <?php
-                $tags = $this->tagModel->getTagsByCategory($category->categoryId);
-                foreach ($tags as $tag): ?>
-                    <li><?php echo $tag->name; ?></li>
-                    <a href="<?php echo URLROOT; ?>/categories/editTag/<?php echo $tag->tagId; ?>">Edit</a>
-                    <form action="<?php echo URLROOT; ?>/categories/deleteTag/<?php echo $tag->tagId; ?>" method="post" style="display:inline;">
-                        <input type="submit" value="Delete">
-                    </form>
-                <?php endforeach; ?>
-            </ul>
-            <a href="<?php echo URLROOT; ?>/categories/addTag/<?php echo $category->categoryId; ?>">Add Tag</a>
-        </li>
-    <?php endforeach; ?>
-</ul>
+<div class="container mx-auto p-4">
+    <h2 class="text-2xl font-bold mb-4">Categories With there Tags</h2>
+
+    <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <?php foreach ($data['categories'] as $category): ?>
+            <li class="border p-4 mb-4">
+                <div class="flex justify-between mb-2">
+                    <span class="font-bold"><?php echo $category->name; ?></span>
+                    <a href="<?php echo URLROOT; ?>/categories/edit/<?php echo $category->categoryId; ?>"
+                        class="text-blue-500 hover:underline">Edit</a>
+                </div>
+
+                <?php $tags = $this->tagModel->getTagsByCategory($category->categoryId); ?>
+                <ul class="list-disc pl-4">
+                    <?php foreach ($tags as $tag): ?>
+                        <li class="flex items-center justify-between">
+                            <span><?php echo $tag->name; ?></span>
+                            <div class="flex space-x-2">
+                                <a href="<?php echo URLROOT; ?>/categories/editTag/<?php echo $tag->tagId; ?>"
+                                    class="text-blue-500 hover:underline">Edit</a>
+
+                                <form action="<?php echo URLROOT; ?>/categories/deleteTag/<?php echo $tag->tagId; ?>"
+                                    method="post" class="inline">
+                                    <input type="submit" value="Delete"
+                                        class="text-red-500 hover:text-red-700 cursor-pointer">
+                                </form>
+                            </div>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+
+                <a href="<?php echo URLROOT; ?>/categories/addTag/<?php echo $category->categoryId; ?>"
+                    class="mt-2 inline-block px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Add Tag</a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</div>
+
 
 
 

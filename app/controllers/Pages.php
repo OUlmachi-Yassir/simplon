@@ -60,8 +60,14 @@ class Pages extends Controller
   public function index()
   {
 
+    // Assuming you have a Wiki model
+    $wikiModel = $this->model('Wiki');
+
+    // Fetch wikis from the model
+    $wikis = $wikiModel->getWikis();
     $data = [
-      'title' => 'Welcom'
+      'title' => 'Welcom',
+      'wikis' => $wikis,
     ];
 
 

@@ -122,10 +122,64 @@ class Categories extends Controller
     }
 
 
+    public function deleteWiki($wikiId)
+{
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($this->wikiModel->deleteWiki($wikiId)) {
+            redirect('categories');
+        } else {
+            die('Something went wrong');
+
+        }
+    } else {
+        redirect('categories');
+    }
+}
+
+// Edit a wiki
+public function editWiki($id)
+{
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Sanitize input
+        $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
+        $content = filter_input(INPUT_POST, 'content', FILTER_SANITIZE_STRING);
+        $categoryId = filter_input(INPUT_POST, 'category', FILTER_VALIDATE_INT);
+
+        // Perform validation as needed
+
+        if ($this->wikiModel->updateWiki($id, $title, $content, $categoryId)) {
+            redirect('categories');
+        } else {
+            die('Something went wrong');
+        }
+    } else {
+        $wiki = $this->wikiModel->getWikiById($id);
+        $categories = $this->categoryModel->getCategories();
+        $this->view('categorie/editWiki', ['wiki' => $wiki, 'categories' => $categories]);
+    }
+}
+
+public function archiveWiki($wikiId)
+{
+    $this->wikiModel->archiveWiki($wikiId);
+    if ($this->wikiModel->archiveWiki($wikiId)) {
+        // Redirect or handle success
+        redirect('pages/index');
+    } else {
+        // Handle failure
+        redirect('pages/index');
+        die('Failed to archive the wiki.');
+    }
+}
+
+
     public function index()
     {
         $categories = $this->categoryModel->getCategories();
         $this->view('pages/adminD', ['categories' => $categories]);
     }
 
+
+
+   
 }

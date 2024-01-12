@@ -17,7 +17,7 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
                 </a>
             </div>
            <?php if(isset($_SESSION['user_id'])) :?>
-            <?php if ($_SESSION['user_role'] == 'admin') :?>
+            <?php if ($_SESSION['user_role'] == 'Admin') :?>
 
                 <div class="flex shrink-0">
                 <a aria-current="page" class="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline" href="<?php echo URLROOT; ?>/pages/index">
@@ -30,7 +30,7 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
 
                 <a class="hidden items-center justify-center rounded-xl bg-red-700 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset  transition-all duration-150 hover:bg-black sm:inline-flex"
                     href="<?php echo URLROOT; ?>/users/Logout">Logout</a>
-                    <?php  elseif ($_SESSION['user_role'] == 'author') : ?>
+                    <?php  elseif ($_SESSION['user_role'] == 'Author') : ?>
                 <div class="flex shrink-0">
                 <a aria-current="page" class="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline" href="<?php echo URLROOT; ?>/pages/index">
                     WiKiiii's
@@ -66,7 +66,7 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
         </p>
 
 
-        <form action="/search">
+        <form action="/search" id="searchWikiForm">
             <label
                 class="mx-auto mt-8 relative bg-white min-w-sm max-w-2xl flex flex-col md:flex-row items-center justify-center border py-2 px-2 rounded-2xl gap-2 shadow-2xl focus-within:border-gray-300"
                 for="search-bar">
@@ -82,11 +82,66 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
                     </div>
                 </button>
             </label>
+            
         </form>
 
        
     </div>
 </div>
+
+
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <?php
+    // Display search results if available
+    if (!empty($data['wikis'])) :
+        foreach ($data['wikis'] as $wiki) :
+            ?>
+            <div class="border border-gray-200 p-4 rounded-md shadow-lg shadow-grey-800">
+                <h2 class="text-lg font-semibold mb-2"><?= $wiki->title; ?></h2>
+                <p class="text-gray-700"><?= $wiki->content; ?></p>
+                <!-- Add buttons as needed (Edit, Delete, Archive) -->
+            </div>
+            <?php
+        endforeach;
+    else :
+        ?>
+        <p>No results found.</p>
+    <?php endif; ?>
+</div>
+
+
+
+ 
+
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ">
+    <?php foreach ($data['wikis'] as $wiki) : ?>
+        <?php if (!$wiki->isArchived) : ?>
+        <div class="border border-gray-200 p-4 rounded-md shadow-lg shadow-grey-800 ">
+            <h2 class="text-lg font-semibold mb-2"><?= $wiki->title; ?></h2>
+            <p class="text-gray-700"><?= $wiki->content; ?></p>
+            <div class="mt-4 flex justify-end ">
+                <!-- Edit button -->
+                <a class="bg-blue-500 text-white px-4 py-2 rounded-md mr-2" href="<?= URLROOT ?>/categories/editWiki/<?= $wiki->wikiId; ?>">Edit</a>
+                <!-- Delete button -->
+                <form method="post" action="<?= URLROOT ?>/categories/deleteWiki/<?= $wiki->wikiId; ?>" onsubmit="return confirm('Are you sure you want to delete this wiki?');">
+                    <button class="bg-red-500 text-white px-4 py-2 rounded-md mr-2" type="submit">Delete</button>
+                </form>
+                <!-- Archive button -->
+                <form class="bg-black text-white px-4 py-2 rounded-md" action="<?= URLROOT; ?>/categories/archiveWiki/<?= $wiki->wikiId; ?>" method="post">
+                    <button type="submit">Archive</button>
+                </form>
+            </div>
+        </div>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</div>
+
+
+
+
+
 
 <?php
 require APPROOT . '/views/inc/footer.php';
