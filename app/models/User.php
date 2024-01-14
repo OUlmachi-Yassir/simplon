@@ -49,4 +49,11 @@
         return false;
       }
     }
+
+
+    public function getTotalAuthorsCount()
+{
+    $this->db->query('SELECT COUNT(*) AS total FROM user WHERE role = "Author"');
+    return $this->db->single()->total;
+}
   }

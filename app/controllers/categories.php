@@ -4,6 +4,7 @@ class Categories extends Controller
     private $categoryModel;
     protected $tagModel;
     protected $wikiModel;
+    protected $userModel;
     public function __construct()
     {
         $this->categoryModel = $this->model('Category');
@@ -120,6 +121,7 @@ class Categories extends Controller
         // Load your view for displaying wikis for the author
         $this->view('pages/authorD', ['wikis' => $wikis]);
     }
+    
 
 
     public function deleteWiki($wikiId)
@@ -179,4 +181,26 @@ public function archiveWiki($wikiId)
         $this->view('pages/adminD', ['categories' => $categories]);
     }
 
+
+
+    public function showStatistics()
+{
+    
+
+    $wikiCount = $this->wikiModel->getTotalWikisCount('wiki');
+    $categoryCount = $this->categoryModel->getTotalCategoriesCount();
+    $authorCount = $this->userModel->getTotalAuthorsCount('user');
+
+//     var_dump($wikiCount, $categoryCount, $authorCount); // Debugging statement
+//    die();
+    $data = [
+        'wikiCount' => $wikiCount,
+        'categoryCount' => $categoryCount,
+        'authorCount' => $authorCount,
+    ];
+//   var_dump($data);
+//     die();
+
+ $this->view('pages/adminD', $data);
+}
 }

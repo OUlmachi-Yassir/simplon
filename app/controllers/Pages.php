@@ -4,14 +4,16 @@ class Pages extends Controller
   private $categoryModel;
   protected $tagModel;
   private $wikiModel;
+  protected $userModel;
   public function __construct()
   {
-    if(!isset($_SESSION['user_id'])){
-      redirect('users/login');
-    }
+    // if(!isset($_SESSION['user_id'])){
+    //   redirect('users/login');
+    // }
     $this->categoryModel = $this->model('Category');
     $this->tagModel = $this->model('Tag');
     $this->wikiModel = $this->model('Wiki'); // Assuming you have a Wiki model
+    $this->userModel = $this->model('user');
 
   }
 
@@ -22,10 +24,11 @@ class Pages extends Controller
           $title = $_POST['title'];
           $content = $_POST['content'];
           $categoryId = $_POST['category'];
+          $authorId = $_SESSION['user_id'];
           $tags = isset($_POST['tags']) ? $_POST['tags'] : [];
 
           // Add the wiki to the wiki table
-          $wikiId = $this->wikiModel->addWiki($title, $content, $categoryId);
+          $wikiId = $this->wikiModel->addWiki($title, $content,$authorId, $categoryId);
 
           // Add tags to the wikitag association table
           foreach ($tags as $tagId) {
@@ -55,6 +58,7 @@ class Pages extends Controller
     }
   }
 
+ 
 
 
   public function index()
@@ -122,14 +126,38 @@ class Pages extends Controller
 
     $this->view('pages/authorD', $data);
   }
+  
 
   public function adminD()
   {
+    $wikiCount = $this->wikiModel->getTotalWikisCount('wiki');
+    $categoryCount = $this->categoryModel->getTotalCategoriesCount();
+    $authorCount = $this->userModel->getTotalAuthorsCount('user');
     $categories = $this->categoryModel->getCategories();
     $data = [
       'categories' => $categories,
       'tagModel' => $this->tagModel,
+      'wikiCount' => $wikiCount,
+        'categoryCount' => $categoryCount,
+        'authorCount' => $authorCount,
     ];
     $this->view('pages/adminD', $data);
   }
+
+
+  public function searchSuggestions()
+{
+    if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['search_term'])) {
+        // Get the search term from the Ajax request
+        $title = filter_input(INPUT_GET, 'search_term', FILTER_SANITIZE_STRING);
+
+        // Call the model to search for wikis by title and get suggestions
+        $wikis = $this->wikiModel->searchWikisByTitle($title);
+
+        // Render suggestions (you can use a separate view file for this)
+        foreach ($wikis as $wiki) {
+            echo '<p>' . $wiki->title . '</p>';
+        }
+    }
+}
 }

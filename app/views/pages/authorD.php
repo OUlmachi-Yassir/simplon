@@ -42,7 +42,14 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
 
 
 
+
+
+
+
+
+
 <h1>Author Dashboard</h1>
+
 
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
     <?php foreach ($data['wikis'] as $wiki) : ?>
@@ -50,7 +57,6 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
             <h2 class="text-lg font-semibold mb-2"><?= $wiki->title; ?></h2>
             <p class="text-gray-700"><?= $wiki->content; ?></p>
             <div class="mt-4 flex justify-end">
-
                 <a class="bg-blue-500 text-white px-4 py-2 rounded-md mr-2" href="<?= URLROOT ?>/categories/editWiki/<?= $wiki->wikiId; ?>">Edit</a>
                 <!-- Delete button -->
                 <form method="post" action="<?= URLROOT ?>/categories/deleteWiki/<?= $wiki->wikiId; ?>" onsubmit="return confirm('Are you sure you want to delete this wiki?');">
@@ -65,29 +71,50 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
 
 
 <br><br><br>
-<h1>Add a Wiki</h1>
+<div class="max-w-screen-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+    <h1 class="text-2xl font-bold mb-4">Add a Wiki</h1>
 
-<form action="<?= URLROOT; ?>/pages/addWiki" method="post" id="addWikiForm">
-    <label for="title">Title:</label>
-    <input type="text" id="title" name="title" required>
+    <form action="<?= URLROOT; ?>/pages/addWiki" method="post" id="addWikiForm" class="space-y-4">
+        <input type="hidden" name="AuthorId" value="<?= $_SESSION['user_id'] ?? '' ?>">
+        <div class="flex flex-col">
+            <label for="title" class="text-lg font-medium mb-1">Title:</label>
+            <input type="text" id="title" name="title" required
+                class="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-blue-500">
+        </div>
 
-    <label for="content">Content:</label>
-    <textarea id="content" name="content" required></textarea>
+        <div class="flex flex-col">
+            <label for="content" class="text-lg font-medium mb-1">Content:</label>
+            <textarea id="content" name="content" required
+                class="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-blue-500"></textarea>
+        </div>
 
-    <label for="category">Category:</label>
-    <select id="category" name="category" onchange="updateTags()" required>
-        <?php foreach ($data['categories'] as $category) : ?>
-            <option value="<?= $category->categoryId; ?>"><?= $category->name; ?></option>
-        <?php endforeach; ?>
-    </select>
+        <div class="flex flex-col">
+            <label for="category" class="text-lg font-medium mb-1">Category:</label>
+            <select id="category" name="category" onchange="updateTags()"
+                class="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-blue-500"
+                required>
+                <?php foreach ($data['categories'] as $category) : ?>
+                    <option value="<?= $category->categoryId; ?>"><?= $category->name; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
 
-    <label for="tags">Tags:</label>
-    <select id="tags" name="tags[]" multiple>
-        <!-- Tags will be populated dynamically using JavaScript -->
-    </select>
+        <div class="flex flex-col">
+            <label for="tags" class="text-lg font-medium mb-1">Tags:</label>
+            <select id="tags" name="tags[]" multiple
+                class="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-blue-500">
+                <!-- Tags will be populated dynamically using JavaScript -->
+            </select>
+        </div>
 
-    <button type="submit">Add Wiki</button>
-</form>
+        <button type="submit"
+            class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-700">
+            Add Wiki
+        </button>
+    </form>
+</div>
+
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     function updateTags() {

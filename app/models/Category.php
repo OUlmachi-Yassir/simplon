@@ -64,4 +64,13 @@ class Category
             return false;
         }
     }
+
+
+    // In your Category model (Category.php)
+public function getTotalCategoriesCount()
+{
+    $this->db->query('SELECT COUNT(*) AS total FROM category');
+    return $this->db->single()->total;
+   
+}
 }

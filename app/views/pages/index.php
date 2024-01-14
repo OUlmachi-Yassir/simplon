@@ -96,21 +96,65 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
             <p class="text-gray-700"><?= $wiki->content; ?></p>
             <p class="bg-blue-300 p-3 rounded-md"><?= $wiki->categoryId; ?></p>
             <div class="mt-4 flex justify-end ">
+            <?php if(isset($_SESSION['user_id'])) :?>
+                <?php if ($_SESSION['user_role'] == 'Author') :?>
                 <!-- Edit button -->
                 <a class="bg-blue-500 text-white px-4 py-2 rounded-md mr-2" href="<?= URLROOT ?>/categories/editWiki/<?= $wiki->wikiId; ?>">Edit</a>
                 <!-- Delete button -->
                 <form method="post" action="<?= URLROOT ?>/categories/deleteWiki/<?= $wiki->wikiId; ?>" onsubmit="return confirm('Are you sure you want to delete this wiki?');">
                     <button class="bg-red-500 text-white px-4 py-2 rounded-md mr-2" type="submit">Delete</button>
                 </form>
+                <?php  elseif ($_SESSION['user_role'] == 'Admin') : ?>
                 <!-- Archive button -->
                 <form class="bg-black text-white px-4 py-2 rounded-md" action="<?= URLROOT; ?>/categories/archiveWiki/<?= $wiki->wikiId; ?>" method="post">
                     <button type="submit">Archive</button>
                 </form>
+                <?php  endif; ?>
+
+            <?php  else : ?>
+
+                <?php endif; ?>
+                
             </div>
         </div>
         <?php endif; ?>
     <?php endforeach; ?>
 </div>
+
+
+<form action="<?= URLROOT; ?>/pages/search" method="post">
+    <label for="search_title">Search by Title:</label>
+    <input type="text" id="search_title" name="search_title" required>
+
+    <!-- Display Search Suggestions -->
+    <div id="search-suggestions"></div>
+
+    <button type="submit">Search</button>
+</form>
+
+<!-- Include jQuery (you can use a CDN or download the library) -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Handle keyup event on the search input
+        $('#search_title').keyup(function () {
+            // Get the search term
+            var searchTerm = $(this).val();
+
+            // Make an Ajax request to fetch suggestions
+            $.ajax({
+                type: 'GET',
+                url: '<?= URLROOT; ?>/pages/searchSuggestions',
+                data: { search_term: searchTerm },
+                success: function (response) {
+                    // Display suggestions in the suggestions container
+                    $('#search-suggestions').html(response);
+                }
+            });
+        });
+    });
+</script>
 
 <?php
 require APPROOT . '/views/inc/footer.php';

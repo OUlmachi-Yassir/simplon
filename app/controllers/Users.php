@@ -99,9 +99,9 @@ class Users extends Controller
   {
 
 
-    // Check if user is already logged in
+   
     if ($this->isLoggedIn()) {
-      redirect('pages/index'); // Change 'dashboard' to the desired page
+      redirect('pages/index'); 
     }
 
 
@@ -182,11 +182,10 @@ class Users extends Controller
 
     if ($this->isLoggedIn()) {
         if ($_SESSION['user_role'] == 'Admin') {
-            redirect('pages/adminD'); // Redirect to adminD.php for admins
+            redirect('pages/adminD'); 
         } elseif ($_SESSION['user_role'] == 'Author') {
-            redirect('pages/authorD'); // Redirect to authorD.php for authors
+            redirect('pages/authorD'); 
         } else {
-            // Default redirection if the role is not recognized
             redirect('pages/index');
         }
     }

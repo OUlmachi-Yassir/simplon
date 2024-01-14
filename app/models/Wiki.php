@@ -7,18 +7,27 @@ class Wiki {
         $this->db = new Database; // Assuming you have a Database class
     }
 
-    public function addWiki($title, $content, $categoryId)
-    {
-        $query = "INSERT INTO wiki (title, content, creationDate, categoryId) VALUES (:title, :content, NOW(), :categoryId)";
-        $this->db->query($query);
-        $this->db->bind(':title', $title);
-        $this->db->bind(':content', $content);
-        $this->db->bind(':categoryId', $categoryId);
+    // Inside your Wiki model
+public function addWiki($title, $content, $creationDate, $categoryId)
+{
+    // Assuming you have started the session before
+    $authorId = $_SESSION['user_id'];
 
-        $this->db->execute();
+    // Your database insertion query
+    $this->db->query('INSERT INTO wiki (title, content, creationDate, authorId, categoryId) VALUES (:title, :content, :creationDate, :authorId, :categoryId)');
 
-        return $this->db->lastInsertId();
-    }
+    // Bind parameters
+    $this->db->bind(':title', $title);
+    $this->db->bind(':content', $content);
+    $this->db->bind(':creationDate', $creationDate);
+    $this->db->bind(':authorId', $authorId);
+    $this->db->bind(':categoryId', $categoryId);
+
+    $this->db->execute();
+
+    return $this->db->lastInsertId();
+}
+
 
     public function addWikiTag($wikiId, $tagId)
     {
@@ -41,6 +50,7 @@ class Wiki {
 
         return $this->db->single(); // Assuming you have a method like `single()` to fetch a single result
     }
+    
 
     public function archiveWiki($wikiId)
 {
@@ -70,6 +80,23 @@ public function editWiki($wikiId, $title, $content, $categoryId)
     $this->db->bind(':categoryId', $categoryId);
 
     $this->db->execute();
+}
+
+
+public function getTotalWikisCount()
+{
+    $this->db->query('SELECT COUNT(*) AS total FROM wiki');
+    return $this->db->single()->total;
+}
+
+
+public function searchWikisByTitle($searchQuery)
+{
+    // Use a prepared statement to prevent SQL injection
+    $this->db->query('SELECT * FROM wiki WHERE title LIKE :searchQuery');
+    $this->db->bind(':searchQuery', '%' . $searchQuery . '%'); // Use % for partial matching
+
+    return $this->db->resultSet();
 }
 
 }

@@ -1,7 +1,9 @@
 <?php
 require APPROOT . '/views/inc/header.php';
 
-
+if(!isset($_SESSION['user_id'])){
+    redirect('users/login');
+}
 ?>
 
 <header class="fixed inset-x-0 top-0 z-30 mx-auto w-full max-w-screen-md border border-gray-100 bg-white/80 py-3 shadow backdrop-blur-lg md:top-6 md:rounded-3xl lg:max-w-screen-lg">
@@ -33,6 +35,37 @@ require APPROOT . '/views/inc/header.php';
         </div>
     </div>
 </header>
+<br><br><br>
+
+
+
+
+
+<br><br><br>
+<h1 class=" flex justify-center text-xl font-bold text-black">Site Statistics</h1>
+<br>
+
+<div class="flex justify-center items-center  ">
+    <!-- Wikis Card -->
+    <div class="bg-blue-200 p-6 m-2 rounded-lg shadow-md">
+        <h2 class="text-xl font-bold text-blue-700">Total Wikis</h2>
+        <p class="text-lg text-gray-700"><?= $data['wikiCount'] ?? 'N/A'; ?></p>
+    </div>
+
+    <!-- Categories Card -->
+    <div class="bg-green-200 p-6 m-2 rounded-lg shadow-md">
+        <h2 class="text-xl font-bold text-green-700">Total Categories</h2>
+        <p class="text-lg text-gray-700"><?= $data['categoryCount'] ?? 'N/A'; ?></p>
+    </div>
+
+    <!-- Authors Card -->
+    <div class="bg-indigo-200 p-6 m-2 rounded-lg shadow-md">
+        <h2 class="text-xl font-bold text-indigo-700">Total Authors</h2>
+        <p class="text-lg text-gray-700"><?= $data['authorCount'] ?? 'N/A'; ?></p>
+    </div>
+</div>
+
+
 <br><br><br>
 
 
