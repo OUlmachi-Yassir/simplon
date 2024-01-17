@@ -35,4 +35,15 @@ class Tags extends Controller {
         $tags = $this->tagModel->getTagsByCategory($categoryId);
         $this->view('pages/adminD', ['tags' => $tags, 'categoryId' => $categoryId]);
     }
+
+    public function getTagsByIdCategories()  {
+        header('Content-Type: application/json');
+      $idCategory=$_GET["idcate"];
+      $Tags=  $this->tagModel->getTagsByCategory($idCategory); 
+      $obTag=array();
+      foreach ($Tags as $key => $value) {
+      $obTag[]= get_object_vars($value);
+      } 
+       echo json_encode($obTag);
+    }
 }

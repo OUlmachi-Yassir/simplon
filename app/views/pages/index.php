@@ -3,7 +3,6 @@ require APPROOT . '/views/inc/header.php';
 
 var_dump($_SESSION['user_id'], $_SESSION['user_role']);
 
-
 ?>
 
 <header
@@ -66,12 +65,12 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
         </p>
 
 
-        <form action="/search" id="searchWikiForm">
+        <form action="<?= URLROOT; ?>/pages/search" method="post" id="searchWikiForm">
             <label
                 class="mx-auto mt-8 relative bg-white min-w-sm max-w-2xl flex flex-col md:flex-row items-center justify-center border py-2 px-2 rounded-2xl gap-2 shadow-2xl focus-within:border-gray-300"
-                for="search-bar">
+                for="search_title">
 
-                <input id="search-bar" placeholder="your keyword here" name="q"
+                <input id="search_title" placeholder="your keyword here" name="search_title"
                     class="px-6 py-2 w-full rounded-md flex-1 outline-none bg-white" required="">
                 <button type="submit"
                     class="w-full md:w-auto px-6 py-3 bg-black border-black text-white fill-white active:scale-95 duration-100 border will-change-transform overflow-hidden relative rounded-xl transition-all">
@@ -82,10 +81,12 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
                     </div>
                 </button>
             </label>
-            
+            <div id="search-suggestions" class="mx-auto relative bg-white min-w-sm max-w-2xl flex flex-col md:flex-row items-center justify-center border py-2 px-2 rounded-2xl gap-2 shadow-2xl focus-within:border-gray-300"
+></div>
         </form>
     </div>
 </div>
+
 
 
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ">
@@ -94,7 +95,8 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
         <div class="border border-gray-200 p-4 rounded-md shadow-lg shadow-grey-800 ">
             <h2 class="text-lg font-semibold mb-2"><?= $wiki->title; ?></h2>
             <p class="text-gray-700"><?= $wiki->content; ?></p>
-            <p class="bg-blue-300 p-3 rounded-md"><?= $wiki->categoryId; ?></p>
+            <p class="bg-blue-300 p-3 rounded-md "><?= $wiki->categoryName; ?></p>
+            <p class="p-3 rounded-md font-semibold text-white inline-flex items-center justify-center rounded-xl bg-black text-sm"><?= $wiki->tagNames; ?></p>
             <div class="mt-4 flex justify-end ">
             <?php if(isset($_SESSION['user_id'])) :?>
                 <?php if ($_SESSION['user_role'] == 'Author') :?>
@@ -122,15 +124,7 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
 </div>
 
 
-<form action="<?= URLROOT; ?>/pages/search" method="post">
-    <label for="search_title">Search by Title:</label>
-    <input type="text" id="search_title" name="search_title" required>
 
-    <!-- Display Search Suggestions -->
-    <div id="search-suggestions"></div>
-
-    <button type="submit">Search</button>
-</form>
 
 <!-- Include jQuery (you can use a CDN or download the library) -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -152,9 +146,21 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
                     $('#search-suggestions').html(response);
                 }
             });
+
+            // Make an Ajax request to fetch search results
+            $.ajax({
+                type: 'GET',
+                url: '<?= URLROOT; ?>/pages/searchWikis',
+                data: { search_term: searchTerm },
+                success: function (response) {
+                    // Handle the search results (you can update this based on your needs)
+                    console.log(response);
+                }
+            });
         });
     });
 </script>
+
 
 <?php
 require APPROOT . '/views/inc/footer.php';

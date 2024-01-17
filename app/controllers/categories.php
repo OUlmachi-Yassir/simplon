@@ -150,7 +150,7 @@ public function editWiki($id)
         // Perform validation as needed
 
         if ($this->wikiModel->updateWiki($id, $title, $content, $categoryId)) {
-            redirect('categories');
+            redirect('categorie');
         } else {
             die('Something went wrong');
         }

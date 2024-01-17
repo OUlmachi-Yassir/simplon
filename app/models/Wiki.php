@@ -40,9 +40,29 @@ public function addWiki($title, $content, $creationDate, $categoryId)
     }
   public function getWikis()
     {
-        $this->db->query('SELECT * FROM wiki WHERE isArchived=0');
+        $this->db->query('SELECT wiki.*, category.name AS categoryName, GROUP_CONCAT(tag.name) AS tagNames
+        FROM wiki
+        INNER JOIN category ON wiki.categoryId = category.categoryId
+        LEFT JOIN wikitag ON wiki.wikiId = wikitag.wikiId
+        LEFT JOIN tag ON wikitag.tagId = tag.tagId
+        WHERE wiki.isArchived = 0
+        GROUP BY wiki.wikiId');
         return $this->db->resultSet();
     }
+
+
+    public function updateWiki($wikiId, $title, $content, $categoryId)
+    {
+        $this->db->query('UPDATE wiki SET title = :title, content = :content, categoryId = :categoryId WHERE wikiId = :wikiId');
+        $this->db->bind(':wikiId', $wikiId);
+        $this->db->bind(':title', $title);
+        $this->db->bind(':content', $content);
+        $this->db->bind(':categoryId', $categoryId);
+
+        return $this->db->execute();
+    }
+
+
    public function getWikiById($wikiId)
     {
         $this->db->query('SELECT * FROM wiki WHERE wikiId = :wikiId');
@@ -50,6 +70,22 @@ public function addWiki($title, $content, $creationDate, $categoryId)
 
         return $this->db->single(); // Assuming you have a method like `single()` to fetch a single result
     }
+
+
+    public function getWikisByAuthor($authorId)
+{
+    $this->db->query('SELECT wiki.*, category.name AS categoryName, GROUP_CONCAT(tag.name) AS tagNames
+        FROM wiki
+        INNER JOIN category ON wiki.categoryId = category.categoryId
+        LEFT JOIN wikitag ON wiki.wikiId = wikitag.wikiId
+        LEFT JOIN tag ON wikitag.tagId = tag.tagId
+        WHERE wiki.isArchived = 0 AND wiki.authorId = :authorId
+        GROUP BY wiki.wikiId');
+    
+    $this->db->bind(':authorId', $authorId);
+
+    return $this->db->resultSet();
+}
     
 
     public function archiveWiki($wikiId)
@@ -92,9 +128,41 @@ public function getTotalWikisCount()
 
 public function searchWikisByTitle($searchQuery)
 {
+
     // Use a prepared statement to prevent SQL injection
-    $this->db->query('SELECT * FROM wiki WHERE title LIKE :searchQuery');
-    $this->db->bind(':searchQuery', '%' . $searchQuery . '%'); // Use % for partial matching
+    $this->db->query('SELECT wiki.*, category.name, GROUP_CONCAT(tag.name) AS tags
+              FROM wiki
+              LEFT JOIN category ON wiki.categoryId = category.categoryId
+              LEFT JOIN wikitag ON wiki.wikiId = wikitag.wikiId
+              LEFT JOIN tag ON wikitag.tagId = tag.tagId
+              WHERE (wiki.title LIKE :searchTerm OR wiki.content LIKE :searchTerm OR category.name LIKE :searchTerm OR tag.name LIKE :searchTerm)
+              AND isArchived = 0
+              GROUP BY wiki.wikiId'); // Group by wikiId to avoid duplicate rows
+
+    $this->db->bind(':searchTerm', '%' . $searchQuery . '%'); // Use % for partial matching
+
+    // return $this->db->resultSet();
+    // // Use a prepared statement to prevent SQL injection
+    // $this->db->query('SELECT * FROM wiki WHERE title LIKE :searchQuery');
+    // $this->db->bind(':searchQuery', '%' . $searchQuery . '%'); // Use % for partial matching
+
+    return $this->db->resultSet();
+}
+
+
+public function searchWikis($searchQuery)
+{
+    // Use a prepared statement to prevent SQL injection
+    $this->db->query('SELECT wiki.*, category.name, GROUP_CONCAT(tag.name) AS tags
+              FROM wiki
+              LEFT JOIN category ON wiki.categoryId = category.categoryId
+              LEFT JOIN wikitag ON wiki.wikiId = wikitag.wikiId
+              LEFT JOIN tag ON wikitag.tagId = tag.tagId
+              WHERE (wiki.title LIKE :searchTerm OR wiki.content LIKE :searchTerm OR category.name LIKE :searchTerm OR tag.name LIKE :searchTerm)
+              AND isArchived = 0
+              GROUP BY wiki.wikiId'); // Group by wikiId to avoid duplicate rows
+
+    $this->db->bind(':searchTerm', '%' . $searchQuery . '%'); // Use % for partial matching
 
     return $this->db->resultSet();
 }

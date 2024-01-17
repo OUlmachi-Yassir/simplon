@@ -1,6 +1,10 @@
 <?php
 require APPROOT . '/views/inc/header.php';
+if(!isset($_SESSION['user_id'])){
+    redirect('users/login');
+}
 
+var_dump($wikis);
 
 var_dump($_SESSION['user_id'], $_SESSION['user_role']);
 
@@ -122,10 +126,11 @@ var_dump($_SESSION['user_id'], $_SESSION['user_role']);
         var categoryId = $("#category").val();
 
         $.ajax({
-            url: "<?= URLROOT; ?>/pages/getTagsByCategory/" + categoryId,
+            url: `<?= URLROOT; ?>/Tags/getTagsByIdCategories?idcate=${categoryId}` ,
             method: "GET",
+            contentType: "application/json",
             success: function (data) {
-                console.log("Received data from server:", data);
+            
                 var tagsSelect = $("#tags");
                 tagsSelect.empty(); // Clear existing options
 

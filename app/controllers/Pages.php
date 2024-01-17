@@ -109,9 +109,14 @@ class Pages extends Controller
   {
     // Assuming you have a Wiki model
     $wikiModel = $this->model('Wiki');
+    // Fetch the author ID from the session
+    $authorId = $_SESSION['user_id'];
+
+    // Fetch wikis for the current author
+    $wikis = $wikiModel->getWikisByAuthor($authorId);
 
     // Fetch wikis from the model
-    $wikis = $wikiModel->getWikis();
+    // $wikis = $wikiModel->getWikis();
 
     // Other necessary data like categories and tags
     $categories = $this->categoryModel->getCategories();
